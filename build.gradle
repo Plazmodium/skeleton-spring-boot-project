@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.2'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'rest.skeleton.spring.boot'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // Observability (to be configured later phases)
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // OpenAPI (API docs)
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+    // JWT (generation & validation)
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+    // Flyway for DB migrations
+    implementation 'org.flywaydb:flyway-core:10.20.0'
+
+    // Database drivers
+    runtimeOnly 'com.h2database:h2'
+    // Production DB drivers can be added per project needs (e.g., PostgreSQL/MySQL)
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core:5.14.1'
+}
+
+tasks.test {
+    useJUnitPlatform()
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
+}
+
+// Ensure classes target Java 21 even if Gradle runs on a newer JDK
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+}
+
+// Avoid classpath scanning to discover the main class; set it explicitly
+springBoot {
+    mainClass = 'rest.skeleton.spring.boot.Main'
+}

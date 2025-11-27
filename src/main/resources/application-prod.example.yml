@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/rest_skeleton
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: when_authorized
+
+app:
+  security:
+    enabled: true
+    jwt:
+      enabled: true
+      acceptAnyToken: false
+      # Override secret/issuer/expiration via env for real deployments
+      # secret: ${APP_SECURITY_JWT_SECRET}
+      # issuer: ${APP_SECURITY_JWT_ISSUER:rest-skeleton}
+      # expirationSeconds: ${APP_SECURITY_JWT_EXPIRATIONSECONDS:3600}
